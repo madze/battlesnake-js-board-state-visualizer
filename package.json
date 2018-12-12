@@ -4,7 +4,7 @@
   "description": "Module for printing the current board state to the console for battlesnake.io",
   "main": "boardState.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "mocha"
   },
   "repository": {
     "type": "git",
@@ -18,5 +18,9 @@
   "bugs": {
     "url": "https://github.com/madze/battlesnake-js-board-state-visualizer/issues"
   },
-  "homepage": "https://github.com/madze/battlesnake-js-board-state-visualizer#readme"
+  "homepage": "https://github.com/madze/battlesnake-js-board-state-visualizer#readme",
+  "devDependencies": {
+    "chai": "^4.2.0",
+    "mocha": "^5.2.0"
+  }
 }

@@ -1,31 +1,58 @@
 const boardState = module.exports
 
-const parseFood = (board) => {
+boardState.parseFood = (board) => {
   try {
     if(!board.food) return []
     return board.food.map((f) => {
-      f.type = 'food'
-      f.meal = true
-      return f
+      let formattedFood = {
+        x:f.x,
+        y:f.y
+      }
+      formattedFood.type = 'food'
+      formattedFood.meal = true
+      return formattedFood
     })
   } catch (err) {
     console.error('boardState parseFood - error parsing food data: ', err)
   }
 }
 
-const parseSnakes = (gameState) => {
+boardState.parseSnakes = (gameState) => {
   try {
     const snakes = []
-    let type = 'snake'
     gameState.board.snakes.forEach((snake) => {
-      if(snake.id === gameState.you.id) type = 'you'
+      let isYou = snake.id === gameState.you.id
+      
       snake.body.forEach((segment, i) => {
-        segment.type = type
-        if(i === 0) {
-          segment.part = 'head'
-          if(type !== 'you' && snake.body.length < gameState.you.body.length) segment.meal = true
+        let formattedSegment = {
+          x:segment.x,
+          y:segment.y
         }
-        snakes.push(segment)
+        if(isYou) {
+          formattedSegment.type = 'you'
+        } else {
+          formattedSegment.type = 'snake'
+        }
+        formattedSegment.isCollision = true
+        if(i === 0) {
+          formattedSegment.part = 'head'
+          if(!isYou && snake.body.length < gameState.you.body.length) {
+            formattedSegment.meal = true
+            formattedSegment.isCollision = false
+          } 
+        }
+        if(i + 1 === snake.body.length) {
+          formattedSegment.part = 'tail'
+        }
+        if(isYou) {
+          if(formattedSegment.part === 'head') formattedSegment.isCollision = false
+          if(i === 1) {
+            formattedSegment.part = 'neck'
+          } else if(i + 1 === snake.body.length) {
+            formattedSegment.isCollision = false
+          }
+        }
+        snakes.push(formattedSegment)
       })
     })
     return snakes
@@ -33,16 +60,16 @@ const parseSnakes = (gameState) => {
     console.error('boardState parseSnakes - error parsing snake data: ', err)
   }
 }
-const parseBoardPoints = (gameState) => {
+boardState.parseBoardPoints = (gameState) => {
   try {
-    return parseFood(gameState.board)
-    .concat(parseSnakes(gameState))
+    return boardState.parseFood(gameState.board)
+    .concat(boardState.parseSnakes(gameState))
   } catch (err) {
     console.error('boardState parseBoardPoints - error parsing points array data: ', err)
   }
 }
 
-const createBoardMap = (pointsArry, boardHeight, boardWidth) => {
+boardState.createBoardMap = (pointsArry, boardHeight, boardWidth) => {
   try{
     arry = []
   
@@ -98,9 +125,9 @@ boardState.visualize = (gameState, options) => {
     
     if(options.showMySnake) console.log('---------- ', gameState.you.name, ' | TURN: ', gameState.turn, ' | HEALTH: ', gameState.you.health, ' | LENGTH: ', gameState.you.body.length, ' ---------')
     
-    gameState.parsedBoardPoints = parseBoardPoints(gameState)
+    gameState.parsedBoardPoints = boardState.parseBoardPoints(gameState)
 
-    gameState.boardArray = createBoardMap(gameState.parsedBoardPoints, gameState.board.height, gameState.board.width)
+    gameState.boardArray = boardState.createBoardMap(gameState.parsedBoardPoints, gameState.board.height, gameState.board.width)
       
     if(options.showBoard) console.dir(gameState.boardArray)
 
