@@ -91,15 +91,22 @@ const createBoardMap = (pointsArry, boardHeight, boardWidth) => {
 boardState.visualize = (gameState, options) => {
   try{
     options = options ? options : {}
+    options.showMySnake = typeof options.showMySnake !== 'undefined' ? options.showMySnake : true
     options.showBoard = typeof options.showBoard !== 'undefined' ? options.showBoard : true
+    options.addBoard = typeof options.addBoard !== 'undefined' ? options.addBoard : true
+    options.addPoints = typeof options.addPoints !== 'undefined' ? options.addPoints : true
     
-    if(options.showMySnake) console.log('---------- ', gameState.you.name, ' | TURN: ', gameState.turn, ' | - HEALTH: ', gameState.you.health, ' | - LENGTH: ', gameState.you.body.length, ' ---------')
+    if(options.showMySnake) console.log('---------- ', gameState.you.name, ' | TURN: ', gameState.turn, ' | HEALTH: ', gameState.you.health, ' | LENGTH: ', gameState.you.body.length, ' ---------')
     
     gameState.parsedBoardPoints = parseBoardPoints(gameState)
 
     gameState.boardArray = createBoardMap(gameState.parsedBoardPoints, gameState.board.height, gameState.board.width)
       
     if(options.showBoard) console.dir(gameState.boardArray)
+
+    if(!options.addBoard) delete gameState.boardArray
+    
+    if(!options.addPoints) delete gameState.parseBoardPoints
     
     return gameState
 
