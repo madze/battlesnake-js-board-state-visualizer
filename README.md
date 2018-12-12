@@ -6,10 +6,12 @@ A simple module for battlesnake.io, node.js snakes - For parsing points arrays a
 var gameState = boardState.visualize(req.body,[options])
 ```
 ## Options
-* `showMySnake` | Default: `true` | Prints info about your snake to the logs
-* `showBoard` | Default: `true` | Prints the visualized board array to the logs
-* `addBoard` | Default: `false` | Attaches board array to game state object: `gameState.boardArray`
-* `addPoints` | Default: `true` | Attaches parsed points to current game state object: `gameState.parsedBoardPoints` (these will contain additional properties with information about the current state of that point)
+Option | Default | Description
+--- | --- | ---
+`showMySnake` | `true` | Prints info about your snake to the logs
+`showBoard` | `true` | Prints the visualized board array to the logs
+`addBoard` | `false` | Attaches board array to game state object: `gameState.boardArray`
+`addPoints` | `true` | Attaches parsed points to current game state object: `gameState.parsedBoardPoints` (these will contain additional properties with information about the current state of that point)
 
 ## Reading Printed Board Array
 Example board array:
