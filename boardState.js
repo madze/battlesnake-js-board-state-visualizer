@@ -93,7 +93,7 @@ boardState.visualize = (gameState, options) => {
     options = options ? options : {}
     options.showMySnake = typeof options.showMySnake !== 'undefined' ? options.showMySnake : true
     options.showBoard = typeof options.showBoard !== 'undefined' ? options.showBoard : true
-    options.addBoard = typeof options.addBoard !== 'undefined' ? options.addBoard : true
+    options.addBoard = typeof options.addBoard !== 'undefined' ? options.addBoard : false
     options.addPoints = typeof options.addPoints !== 'undefined' ? options.addPoints : true
     
     if(options.showMySnake) console.log('---------- ', gameState.you.name, ' | TURN: ', gameState.turn, ' | HEALTH: ', gameState.you.health, ' | LENGTH: ', gameState.you.body.length, ' ---------')
@@ -105,8 +105,8 @@ boardState.visualize = (gameState, options) => {
     if(options.showBoard) console.dir(gameState.boardArray)
 
     if(!options.addBoard) delete gameState.boardArray
-    
-    if(!options.addPoints) delete gameState.parseBoardPoints
+
+    if(!options.addPoints) delete gameState.parsedBoardPoints
     
     return gameState
 
