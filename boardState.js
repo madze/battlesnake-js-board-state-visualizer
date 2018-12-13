@@ -24,34 +24,40 @@ boardState.parseSnakes = (gameState) => {
       let isYou = snake.id === gameState.you.id
       
       snake.body.forEach((segment, i) => {
+        //build our defualt segement
         let formattedSegment = {
           x:segment.x,
           y:segment.y
         }
-        if(isYou) {
-          formattedSegment.type = 'you'
-        } else {
-          formattedSegment.type = 'snake'
-        }
         formattedSegment.isCollision = true
+
+        //is the head segment
         if(i === 0) {
           formattedSegment.part = 'head'
           if(!isYou && snake.body.length < gameState.you.body.length) {
-            formattedSegment.meal = true
+            formattedSegment.meal = boardState.isEdible(gameState.you.body[0], segment)
             formattedSegment.isCollision = false
           } 
         }
-        if(i + 1 === snake.body.length) {
-          formattedSegment.part = 'tail'
-        }
+
+        //is our snake
         if(isYou) {
+          formattedSegment.type = 'you'
           if(formattedSegment.part === 'head') formattedSegment.isCollision = false
           if(i === 1) {
             formattedSegment.part = 'neck'
           } else if(i + 1 === snake.body.length) {
             formattedSegment.isCollision = false
           }
+        } else {
+          formattedSegment.type = 'snake'
         }
+        
+        //is the tail segment
+        if(i + 1 === snake.body.length) {
+          formattedSegment.part = 'tail'
+        }
+
         snakes.push(formattedSegment)
       })
     })
@@ -140,4 +146,18 @@ boardState.visualize = (gameState, options) => {
   } catch (err) {
     console.error('boardState.visualize - top level error: ', err)
   }
+}
+
+//returns if is possible to collide with snake
+boardState.isEdible = (youHead, snakeHead) => {
+  return pointsParityMatch(youHead.x, snakeHead.x) && pointsParityMatch(youHead.y, snakeHead.y)
+}
+
+function pointsParityMatch(a, b) {
+  return (isOddNum(a) && isOddNum(b)) || (!isOddNum(a) && !isOddNum(b))
+}
+
+function isOddNum(num) {
+  if(num === 0) return false
+  return !!(num % 2)
 }

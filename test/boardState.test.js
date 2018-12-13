@@ -10,7 +10,7 @@ const gameState = {
     width: 5,
     food: [
       { x: 0, y: 0 },
-      {x: 3, y: 0}
+      {x: 3, y: 1}
     ],
     snakes:
       [
@@ -21,7 +21,8 @@ const gameState = {
           body: [
             { x: 1, y: 0 },
             { x: 2, y: 0 },
-            { x: 3, y: 0 }
+            { x: 3, y: 0 },
+            { x: 4, y: 0 }
           ]
         },
         {
@@ -29,9 +30,9 @@ const gameState = {
           name: 'test-two',
           health: 100,
           body: [
-            { x: 0, y: 2 }, 
-            { x: 0, y: 3 }, 
-            { x: 0, y: 4 }
+            { x: 3, y: 2 }, 
+            { x: 2, y: 2 }, 
+            { x: 1, y: 2 }
           ]
         }
       ]
@@ -44,7 +45,8 @@ const gameState = {
     body: [
       { x: 1, y: 0 },
       { x: 2, y: 0 },
-      { x: 3, y: 0 }
+      { x: 3, y: 0 },
+      { x: 4, y: 0 }
     ]
   }
 }
@@ -58,7 +60,7 @@ const gameStateFormatted = {
     width: 5,
     food: [
       { x: 0, y: 0},
-      {x: 3, y: 0}
+      {x: 3, y: 1}
     ],
     snakes:
       [
@@ -69,7 +71,8 @@ const gameStateFormatted = {
           body: [
             { x: 1, y: 0 },
             { x: 2, y: 0 },
-            { x: 3, y: 0 }
+            { x: 3, y: 0 },
+            { x: 4, y: 0 }
           ]
         },
         {
@@ -77,9 +80,9 @@ const gameStateFormatted = {
           name: 'test-two',
           health: 100,
           body: [
-            { x: 0, y: 2 }, 
-            { x: 0, y: 3 }, 
-            { x: 0, y: 4 }
+            { x: 3, y: 2 }, 
+            { x: 2, y: 2 }, 
+            { x: 1, y: 2 }
           ]
         }
       ]
@@ -92,23 +95,41 @@ const gameStateFormatted = {
     body: [
       { x: 1, y: 0 },
       { x: 2, y: 0 },
-      { x: 3, y: 0 }
+      { x: 3, y: 0 },
+      { x: 4, y: 0 }
     ]
   },
   parsedBoardPoints: [ { x: 0, y: 0, type: 'food', meal: true },
-  { x: 3, y: 0, type: 'food', meal: true },
+  { x: 3, y: 1, type: 'food', meal: true },
   { x: 1, y: 0, type: 'you', isCollision: false, part: 'head' },
   { x: 2, y: 0, type: 'you', isCollision: true, part: 'neck' },
-  { x: 3, y: 0, type: 'you', isCollision: false, part: 'tail' },
-  { x: 0, y: 2, type: 'snake', isCollision: true, part: 'head' },
-  { x: 0, y: 3, type: 'snake', isCollision: true },
-  { x: 0, y: 4, type: 'snake', isCollision: true, part: 'tail' } ],
-  boardArray: [ [ 4, 1, 5, 5, 0 ],
+  { x: 3, y: 0, type: 'you', isCollision: true, },
+  { x: 4, y: 0, type: 'you', isCollision: false, part: 'tail' },
+  { x: 3, y: 2, type: 'snake', isCollision: false, meal: true, part: 'head' },
+  { x: 2, y: 2, type: 'snake', isCollision: true },
+  { x: 1, y: 2, type: 'snake', isCollision: true, part: 'tail' } ],
+  boardArray: 
+[ [ 4, 1, 5, 5, 5 ],
+  [ 0, 0, 0, 4, 0 ],
+  [ 0, 5, 5, 2, 0 ],
   [ 0, 0, 0, 0, 0 ],
-  [ 3, 0, 0, 0, 0 ],
-  [ 5, 0, 0, 0, 0 ],
-  [ 5, 0, 0, 0, 0 ] ]
+  [ 0, 0, 0, 0, 0 ] ]
 }
+
+describe('boardState.isEdible', () => {
+  it('All points are even parity - should be true', () => {
+    assert.isTrue(boardState.isEdible({x:2,y:2},{x:8,y:6}))
+  })
+  it('x = even, y = odd - should be true', () => {
+    assert.isTrue(boardState.isEdible({x:2,y:5},{x:8,y:9}))
+  })
+  it('a.x = even, y.x = odd - should not be true', () => {
+    assert.isFalse(boardState.isEdible({x:2,y:5},{x:3,y:9}))
+  })
+  it('zero check', () => {
+    assert.isTrue(boardState.isEdible({x:0,y:6},{x:2,y:0}))
+  })
+})
 
 describe('boardState.parseFood', () => {
   let formattedFood = gameStateFormatted.parsedBoardPoints.filter((point) => point.type === 'food')
