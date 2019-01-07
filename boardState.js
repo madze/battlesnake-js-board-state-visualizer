@@ -35,12 +35,15 @@ boardState.parseSnakes = (gameState) => {
         if(i === 0) {
           formattedSegment.part = 'head'
           if(!isYou && snake.body.length < gameState.you.body.length) {
-            formattedSegment.meal = boardState.isEdible(gameState.you.body[0], segment)
-            formattedSegment.isCollision = false
+            let isEdible = boardState.isEdible(gameState.you.body[0], segment)
+            formattedSegment.meal = isEdible
+            formattedSegment.isCollision = !isEdible
+            if(gameState.you.body.length - snake.body.length < 2) {
+              formattedSegment.risk = true
+            }
           } 
         }
 
-        //is our snake
         if(isYou) {
           formattedSegment.type = 'you'
           if(formattedSegment.part === 'head') formattedSegment.isCollision = false
@@ -51,6 +54,7 @@ boardState.parseSnakes = (gameState) => {
           }
         } else {
           formattedSegment.type = 'snake'
+          formattedSegment.id = snake.id
         }
         
         //is the tail segment
